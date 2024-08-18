@@ -4,7 +4,7 @@ from TL import TL
 import pandas as pd
 
 # Important Path Locations
-main_path = ''
+main_path = 'test/'
 model_path = 'models/'
 dataset_path = 'datasets/BACE1.csv'
 vocab_path = 'datasets/500k_small_molecule.csv'
@@ -36,7 +36,7 @@ dataset_df = pd.read_csv(dataset_path)
 train_selfies = list(dataset_df['selfies'])
 tok = vocab.tokenize(train_selfies)
 encoded = vocab.encode(tok)
-x_train = auto.sm_to_lat_model.predict(encoded)
+x_train = auto.se_to_lat_model.predict(encoded)
 print('Training data prepared.')
 
 # Create GAN
@@ -56,7 +56,7 @@ critic_dropout = 0.2
 generator_dropout = 0.2
 n_stag_iters = 50
 print_every_n_epochs = 250
-run_folder = ''
+run_folder = 'test/'
 critic_path = 'models/pretrained_critic.h5'
 gen_path = 'models/pretrained_generator.h5'
 

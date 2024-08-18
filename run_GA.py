@@ -46,7 +46,7 @@ dataset_df = pd.read_csv(dataset_path)
 train_selfies = list(dataset_df['selfies'])
 tok = vocab.tokenize(train_selfies)
 encoded = vocab.encode(tok)
-x_train = auto.sm_to_lat_model.predict(encoded)
+x_train = auto.se_to_lat_model.predict(encoded)
 print('Training data prepared.')
 
 # Create GA

@@ -4,7 +4,7 @@ from WGANGP import WGANGP
 import pandas as pd
 
 # Important Path Locations
-main_path = ''
+main_path = 'test/'
 model_path = 'models/'
 dataset_path = 'datasets/100k_small_molecule.csv'
 vocab_path = 'datasets/500k_small_molecule.csv'
@@ -36,7 +36,7 @@ dataset_df = pd.read_csv(dataset_path)
 train_selfies = list(dataset_df['selfies'])
 tok = vocab.tokenize(train_selfies)
 encoded = vocab.encode(tok)
-x_train = auto.sm_to_lat_model.predict(encoded)
+x_train = auto.se_to_lat_model.predict(encoded)
 print('Training data prepared.')
 
 # Create GAN
@@ -56,7 +56,7 @@ critic_dropout = 0.2
 generator_dropout = 0.2
 n_stag_iters = 50
 print_every_n_epochs = 250
-run_folder = ''
+run_folder = 'test/'
 
 gan = WGANGP(main_path, input_dim, critic_layers_units, critic_lr, critic_dropout, gp_weight, z_dim, generator_layers_units, generator_batch_norm_momentum, generator_lr, generator_dropout,batch_size, critic_optimizer, generator_optimizer, n_stag_iters)
 
