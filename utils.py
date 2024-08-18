@@ -216,28 +216,28 @@ def calculate_metrics(df_path, save_path, metrics=['MW', 'QED', 'SAS', 'PAINS', 
         df = pd.read_csv(df_path)
         df_train = pd.read_csv('datasets/BACE1.csv')
         hyperparams = [1,256,0.0001]
-        predictor_lv.repurpose_for_target(predictor_path, 'pIC50', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
+        predictor_lv.predict_metric(predictor_path, 'pIC50', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
 
     # logBB
     if 'logBB' in metrics:
         df = pd.read_csv(df_path)
         df_train = pd.read_csv('datasets/logBB.csv')
         hyperparams = [1,256,0.001]
-        predictor_lv.repurpose_for_target(predictor_path, 'logBB', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
+        predictor_lv.predict_metric(predictor_path, 'logBB', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
 
     # Cmax
     if 'logCmax' in metrics:
         df = pd.read_csv(df_path)
         df_train = pd.read_csv('datasets/logCmax.csv')
         hyperparams = [1,1024,0.0001]
-        predictor_lv.repurpose_for_target(predictor_path, 'logCmax', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
+        predictor_lv.predict_metric(predictor_path, 'logCmax', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
 
     # T1/2
     if 'logThalf' in metrics:
         df = pd.read_csv(df_path)
         df_train = pd.read_csv('datasets/logthalf.csv')
         hyperparams = [1,512,0.0001]
-        predictor_lv.repurpose_for_target(predictor_path, 'logThalf', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
+        predictor_lv.predict_metric(predictor_path, 'logThalf', vocab, auto, df_train, df, hyperparams, save_path, str=False, lv = lv)
 
 # Method to calculate fitness score of compounds
 def calculate_fitness(df_path):
