@@ -193,7 +193,7 @@ class Autoencoder:
     def load_autoencoder_model(self, path):
         self.model.load_weights(path)
         self.build_sample_model()
-        self.build_sm_to_lat()
+        self.build_se_to_lat()
     
     # Train
     def fit_model(self, dataX, dataX2, dataY, epochs, batch_size, optimizer):
@@ -233,12 +233,12 @@ class Autoencoder:
 
         # Build predictor models
         self.build_sample_model()
-        self.build_sm_to_lat()
+        self.build_se_to_lat()
 
         # Save final models
         self.model.save(self.path + 'AE_model.h5')
         self.sample_model.save(self.path + 'decoder_model.h5')
-        self.sm_to_lat_model.save(self.path + 'encoder_model.h5')
+        self.se_to_lat_model.save(self.path + 'encoder_model.h5')
 
     # Convert trained autoencoder into latent --> SELFIES model
     def build_sample_model(self):
@@ -326,10 +326,10 @@ class Autoencoder:
         return selfies
 
     # Convert trained autoencoder into SELFIES --> latent model
-    def build_sm_to_lat(self):
+    def build_se_to_lat(self):
         # Remove gaussian noise layer
         prediction = self.selfies_to_latent_model.layers[-2].output
-        self.sm_to_lat_model = Model(inputs = self.selfies_to_latent_model.input, outputs=prediction)
+        self.se_to_lat_model = Model(inputs = self.selfies_to_latent_model.input, outputs=prediction)
 
     # Convert SELFIES to latent vectors
     def selfies_to_latentvector(self, vocab, selfies):
@@ -339,7 +339,7 @@ class Autoencoder:
         for i, en in enumerate(encoded):
             enc_tensors.append(tf.convert_to_tensor(en))
         enc_tensors = tf.convert_to_tensor(enc_tensors)
-        latent_vectors = self.sm_to_lat_model.predict(enc_tensors)
+        latent_vectors = self.se_to_lat_model.predict(enc_tensors)
         return latent_vectors
 
 # Determine percentage of correct molecule reconstruction
@@ -408,7 +408,7 @@ if __name__ == "__main__" :
     #auto.fit_model(encode_train, X_train, Y_train, epochs, batch_size, 'adam')
 
     # Evaluate trained model
-    latent_vectors = auto.sm_to_lat_model.predict(encode_test)
+    latent_vectors = auto.se_to_lat_model.predict(encode_test)
 
     predicted_selfies = []
     for lv in latent_vectors:
