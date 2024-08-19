@@ -20,3 +20,4 @@ The training datasets, python scripts, trained models, and generated BACEE1 cand
 * `docking_analysis`: analyzes molecular docking results, based on binding energy and selectivity score, to identify candidate inhibitors
 * `visualize.py`: various visualization tools for the framework
 * `utils.py`: various utility methods for the framework
+* `requirements.txt`: the package requirements for running the framework in python 3.10
