@@ -200,7 +200,7 @@ def calculate_metrics(df_path, save_path, metrics=['MW', 'QED', 'SAS', 'PAINS', 
     main_path = ''
     vocab_path = 'datasets/500k_small_molecule.csv'
     ae_path = 'models/AE_model.h5'
-    predictor_path = ''
+    predictor_path = 'models/'
     vocab, auto = initialize_models(main_path, vocab_path, ae_path)
     
     lv = None

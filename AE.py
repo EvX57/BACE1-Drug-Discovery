@@ -1,8 +1,8 @@
 from matplotlib import pyplot as plt
-from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Concatenate,LSTM, Bidirectional, Dense, Input, GaussianNoise, BatchNormalization, RepeatVector, Embedding
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Concatenate,LSTM, Bidirectional, Dense, Input, GaussianNoise, BatchNormalization, Embedding
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ReduceLROnPlateau, History, ModelCheckpoint, EarlyStopping
+from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from tensorflow.keras.utils import plot_model
 import numpy as np
 import tensorflow as tf

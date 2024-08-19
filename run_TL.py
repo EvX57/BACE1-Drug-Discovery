@@ -4,7 +4,7 @@ from TL import TL
 import pandas as pd
 
 # Important Path Locations
-main_path = 'test/'
+main_path = ''
 model_path = 'models/'
 dataset_path = 'datasets/BACE1.csv'
 vocab_path = 'datasets/500k_small_molecule.csv'
@@ -56,7 +56,7 @@ critic_dropout = 0.2
 generator_dropout = 0.2
 n_stag_iters = 50
 print_every_n_epochs = 250
-run_folder = 'test/'
+run_folder = ''
 critic_path = 'models/pretrained_critic.h5'
 gen_path = 'models/pretrained_generator.h5'
 

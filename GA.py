@@ -1,5 +1,7 @@
 import tensorflow as tf
 import statistics
+import selfies as sf
+from rdkit.Chem import MolFromSmiles, MolToSmiles
 
 from time import time
 import numpy as np
@@ -10,6 +12,8 @@ import time
 import matplotlib.pyplot as plt
 
 from TL import TL
+import utils
+import visualize
 
 class GA(TL):
     def __init__(self, path, input_dim, critic_layers_units, critic_lr, critic_dropout, gp_weight, z_dim, generator_layers_units, generator_batch_norm_momentum, generator_lr, generator_dropout, batch_size, critic_optimizer, gen_optimizer, n_stag_iters, critic_transfer_layers, gen_transfer_layers, critic_path, gen_path, vocab, auto, predictors):
@@ -221,3 +225,98 @@ class GA(TL):
         plt.title('Gen Fitness Progression (Max)')
         plt.savefig(run_folder + 'gen_fitness_progression_max.png')
         plt.close()
+
+# Visualize improvement in fitness during GA training
+# folder: folder of generated samples every 250 training epochs
+# extract: whether to extract generations or retrieve from saved .csv file
+def visualize_fitness_progression(folder, extract=True):
+    paths = os.listdir(folder)
+    epochs = []
+    distributions = []
+    avgs = []
+
+    # Extract generations, calculate fitness, save in .csv
+    if extract:
+        paths = [p for p in paths if '.txt' in p]
+        epochs = [int(p.split('.')[0].split('_')[-1]) for p in paths]
+        epochs.sort()
+
+        for e in epochs:
+            name = 'samples_epoch_' + str(e)
+            file = open(folder + name + '.txt')
+
+            # Get selfies
+            line = file.readline()
+            line = file.readline()
+            selfies = []
+            while line != '':
+                s = line.split('\n')[0]
+                if s != '':
+                    selfies.append(s)
+                line = file.readline()
+
+            # Remove duplicates
+            selfies = list(set(selfies))
+
+            # Calculate canonical smiles
+            smiles = []
+            valid_selfies = []
+            for sel in selfies:
+                sm = sf.decoder(sel)
+                if sm != None:
+                    mol = MolFromSmiles(sm)
+                    # Check that molecule is valid before adding
+                    if mol != None:
+                        valid_selfies.append(sel)
+                        smiles.append(MolToSmiles(mol))
+
+            # Save to df
+            df_path = folder + name + '.csv'
+            df = pd.DataFrame()
+            df['canonical_smiles'] = smiles
+            df['selfies'] = valid_selfies
+            df.to_csv(df_path, index=False)
+
+            # Calculate metrics
+            utils.calculate_metrics(df_path, df_path, metrics=['pIC50', 'logBB', 'logCmax', 'logThalf'])
+
+            # Calculate fitness
+            utils.calculate_fitness(df_path)
+            df = pd.read_csv(df_path)
+            fitness = list(df['Fitness'])
+
+            # Store values
+            # Remove outliers
+            distributions.append([f for f in fitness if f > 0.0])
+            avgs.append(statistics.mean([f for f in fitness if f > 0.0]))
+
+            print('e' + str(e) + ' Done')
+    else:
+        paths = [p for p in paths if '.csv' in p]
+        epochs = [int(p.split('.')[0].split('_')[-1]) for p in paths]
+        epochs.sort()
+
+        for e in epochs:
+            # Retrieve values
+            name = 'samples_epoch_' + str(e)
+            df = pd.read_csv(folder + name + '.csv')
+            fitness = list(df['Fitness'])
+
+            # Store values
+            # Remove outliers
+            distributions.append([f for f in fitness if f > 0.0])
+            avgs.append(statistics.mean([f for f in fitness if f > 0.0]))
+
+    # Plot
+    plt.plot(epochs, avgs)
+    plt.title('Average Fitness vs Epoch')
+    plt.xlabel('Epoch')
+    plt.ylabel('Average Fitness')
+    plt.tight_layout()
+    plt.savefig(folder + 'avg_fitness.png')
+    plt.close()
+
+    indices = [0, int(len(epochs)/4), int(len(epochs)/2), int(3*len(epochs)/4), -1]
+    d = [distributions[i] for i in indices]
+    names = ['e' + str(epochs[i]) for i in indices]
+    visualize.compare_property_distribution(d, names, 'Fitness', 'Fitness Score Distribution', folder + 'fitness_distribution.png')

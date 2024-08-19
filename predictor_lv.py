@@ -223,8 +223,7 @@ def optimize_hyperparameters(path, property, df, vocab, auto):
     new_df.to_csv(path + 'hyperparam_opt.csv', index=False)
 
 # Train the predictor on a specific molecular property / metric
-def run_target(path, df_path):
-    property = 'pIC50'
+def run_target(path, df_path, property):
     vocab_df = pd.read_csv('datasets/500k_small_molecule.csv')
     ae_path = 'models/AE_model.h5'
     df = pd.read_csv(df_path)
@@ -272,6 +271,7 @@ def predict_metric(path, property, vocab, auto, df_train, df_repurpose, hyperpar
     df_repurpose.to_csv(save_path, index=False)
 
 if __name__ == "__main__":
-    df_path = ''
-    path = ''
-    run_target(path, df_path)
+    path = 'test/'
+    df_path = 'datasets/BACE1.csv'
+    property = 'pIC50'
+    run_target(path, df_path, property)
