@@ -291,6 +291,7 @@ def visualize_fitness_progression(folder, extract=True):
             avgs.append(statistics.mean([f for f in fitness if f > 0.0]))
 
             print('e' + str(e) + ' Done')
+    # Retrieve generations and their fitness values from saved .csv files
     else:
         paths = [p for p in paths if '.csv' in p]
         epochs = [int(p.split('.')[0].split('_')[-1]) for p in paths]
